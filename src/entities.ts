@@ -2,7 +2,7 @@
 // Usually have very minimal logic
 // They should always have one field in them that is a unique identifier
 
-class Movie{
+export class Movie{
     constructor(
         public movieId:number,
         public title:string,
