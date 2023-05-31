@@ -29,10 +29,29 @@ export class MovieDaoTextFile implements MovieDAO{
             } 
         }
     }
-    updateMovie(movie: Movie): Promise<Movie> {
-        throw new Error("Method not implemented.");
+    async updateMovie(movie: Movie): Promise<Movie> {
+        const fileData:Buffer = await readFile('C:\\Users\\Mitchell\\Desktop\\Blockbuster\\movies.txt');
+        const textData:string = fileData.toString();
+        const movies:Movie[] = JSON.parse(textData);
+        for(let i=0;i<movies.length;i++){
+            if(movies[i].movieId === movie.movieId){
+                movies[i] = movie;
+            }
+        }
+        await writeFile('C:\\Users\\Mitchell\\Desktop\\Blockbuster\\movies.txt', JSON.stringify(movie));
+        return movie;
+        
     }
     deleteMovieById(movieId: number): boolean {
-        throw new Error("Method not implemented.");
+        const fileData:Buffer = await readFile('C:\\Users\\Mitchell\\Desktop\\Blockbuster\\movies.txt');
+        const textData:string = fileData.toString();
+        const movies:Movie[] = JSON.parse(textData);
+        for(let i=0;i<movies.length;i++){
+            if(movies[i].movieId === movieId){
+                delete movies[i];
+            }
+        }
+        await writeFile('C:\\Users\\Mitchell\\Desktop\\Blockbuster\\movies.txt', JSON.stringify(movies));
+        return true;
     }   
 }

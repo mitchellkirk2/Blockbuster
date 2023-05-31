@@ -33,3 +33,22 @@ test("Get all movies", async () =>{
     const movies:Movie[] = await movieDAO.getAllMovies();
     expect(movies.length).toBeGreaterThanOrEqual(2);
 });
+
+test("Update movie", async () =>{
+    let movie:Movie = new Movie(0, "The Count of Monte Cristo", "Kevin Reynolds", true, 0);
+    await movieDAO.createMovie(movie);
+    movie.inStock = false;
+
+    movie = await movieDAO.updateMovie(movie);
+    
+    expect(movie.inStock).toBe(false);
+});
+
+// test("Delete movie by ID", async () =>{
+//     let movie:Movie = new Movie(0, "Monte Python and the Holy Grail", "terry Gilliam", true, 0);
+//     movie = await movieDAO.createMovie(movie);
+
+//     let result:boolean = await movieDAO.deleteMovieById(movie.movieId);
+//     expect(result).toBeTruthy();
+
+// })
