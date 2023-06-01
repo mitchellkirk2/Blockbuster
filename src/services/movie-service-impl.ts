@@ -23,6 +23,7 @@ export class MovieServiceImpl implements MovieService {
     async checkoutMovieById(movieId: number): Promise<Movie> {
         let movie:Movie = await this.movieDAO.getMovieById(movieId);
         movie.inStock = false;
+        movie.returnDate = Date.now() + 1_209_600;
         movie = await this.movieDAO.updateMovie(movie);
         return movie;   
     }
@@ -43,11 +44,11 @@ export class MovieServiceImpl implements MovieService {
         // }
     }
 
-    modifyMovie(movie: Movie): Promise<Movie> {
-        throw new Error("Method not implemented.");
+    async modifyMovie(movie: Movie): Promise<Movie> {
+        return this.movieDAO.updateMovie(movie);
     }
 
     removeMovieById(movieId: number): Promise<boolean> {
-        throw new Error("Method not implemented.");
+        return this.movieDAO.deleteMovieById(movieId);
     }
 }
