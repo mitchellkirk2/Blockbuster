@@ -9,14 +9,13 @@ const testMovie:Movie = new Movie(0, 'Titanic', 'James Cameron', true, 1);
 
 test("Create a movie", async ()=> {
     const result:Movie = await movieDAO.createMovie(testMovie);
-    console.log(result);
     expect(result.movieId).not.toBe(0);
 });
 
-// An integration test requires that two or more functoins you wrote pass
+// An integration test requires that two or more functions you wrote pass
 
 test("Get movie by ID", async () =>{
-    let movie:Movie = new Movie(0, "Titanic", "James Cameron", true, 1);
+    let movie:Movie = new Movie(0, "Interstellar", "Christopher Nolan", true, 1);
     movie = await movieDAO.createMovie(movie);
 
     let retrievedMovie:Movie = await movieDAO.getMovieById(movie.movieId);
@@ -40,15 +39,13 @@ test("Update movie", async () =>{
     movie.inStock = false;
 
     movie = await movieDAO.updateMovie(movie);
-    
     expect(movie.inStock).toBe(false);
 });
 
-// test("Delete movie by ID", async () =>{
-//     let movie:Movie = new Movie(0, "Monte Python and the Holy Grail", "terry Gilliam", true, 0);
-//     movie = await movieDAO.createMovie(movie);
+test("Delete movie by ID", async () =>{
+    let movie:Movie = new Movie(0, "Monte Python and the Holy Grail", "Terry Gilliam", true, 0);
+    movie = await movieDAO.createMovie(movie);
 
-//     let result:boolean = await movieDAO.deleteMovieById(movie.movieId);
-//     expect(result).toBeTruthy();
-
-// })
+    let result:boolean = await movieDAO.deleteMovieById(movie.movieId);
+    expect(result).toBeTruthy();
+});

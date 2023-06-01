@@ -9,5 +9,5 @@ export interface MovieDAO{
     //update
     updateMovie(movie:Movie):Promise<Movie>;
     //delete
-    deleteMovieById(movieId:number):boolean;
+    deleteMovieById(movieId:number):Promise<boolean>;
 }
