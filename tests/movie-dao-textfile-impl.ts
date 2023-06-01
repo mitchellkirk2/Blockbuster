@@ -37,6 +37,17 @@ export class MovieDaoTextFile implements MovieDAO{
             } 
         }
     }
+
+    async getMovieByTitle(movieTitle:string): Promise<Movie>{
+        const fileData:Buffer = await readFile('C:\\Users\\Mitchell\\Desktop\\Blockbuster\\movies.txt');
+        const textData:string = fileData.toString();
+        const movies:Movie[] = JSON.parse(textData);
+        for(const movie of movies){
+            if(movie.title === movieTitle){
+                return movie;
+            }
+        }
+    }
     async updateMovie(movie: Movie): Promise<Movie> {
         const fileData:Buffer = await readFile('C:\\Users\\Mitchell\\Desktop\\Blockbuster\\movies.txt');
         const textData:string = fileData.toString();
@@ -63,5 +74,5 @@ export class MovieDaoTextFile implements MovieDAO{
             }
         }
         return false;
-    }   
+    } 
 }

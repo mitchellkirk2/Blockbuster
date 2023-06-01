@@ -9,9 +9,9 @@ export default interface MovieService{
 
     retrieveMovieById(MovieId:number):Promise<Movie>;
 
-    checkoutMovieById(MovieId:number):Promise<boolean>;
+    checkoutMovieById(MovieId:number):Promise<Movie>;
 
-    checkInMovieById(MovieId:number):Promise<boolean>;
+    checkInMovieById(MovieId:number):Promise<Movie>;
 
     searchByTitle(title:string):Promise<Movie>;
 

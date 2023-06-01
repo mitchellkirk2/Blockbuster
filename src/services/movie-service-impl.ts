@@ -20,17 +20,27 @@ export class MovieServiceImpl implements MovieService {
         return this.movieDAO.getMovieById(movieId);
     }
 
-    checkoutMovieById(movieId: number): Promise<boolean> {
+    async checkoutMovieById(movieId: number): Promise<Movie> {
         let movie:Movie = await this.movieDAO.getMovieById(movieId);
-        
+        movie.inStock = false;
+        movie = await this.movieDAO.updateMovie(movie);
+        return movie;   
     }
 
-    checkInMovieById(movieId: number): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async checkInMovieById(movieId: number): Promise<Movie> {
+        let movie = await this.movieDAO.getMovieById(movieId);
+        movie.inStock = true;
+        movie = await this.movieDAO.updateMovie(movie);
+        return movie;
     }
 
     searchByTitle(title: string): Promise<Movie> {
         throw new Error("Method not implemented.");
+        // let movies:Movie[] = await this.movieDAO.getAllMovies();
+        // let movie:Movie;
+        // for(const elem in movies){
+        //     if (elem.title === title)
+        // }
     }
 
     modifyMovie(movie: Movie): Promise<Movie> {
