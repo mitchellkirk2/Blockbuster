@@ -19,7 +19,7 @@ app.get("/movies", async (req, res)=> {
 app.get("/movies/:id", async (req, res)=>{
     const movieId = Number(req.params.id);
     const movie:Movie = await movieService.retrieveMovieById(movieId);
-    res.send(movie);
+    res.send(movie); 
 });
 
 app.post("/movies", async (req, res) =>{
