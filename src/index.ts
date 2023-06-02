@@ -28,4 +28,16 @@ app.post("/movies", async (req, res) =>{
     res.send(movie);
 });
 
+app.patch("/movies/:id/checkout", async (req, res)=>{
+    const movieId = Number(req.params.id);
+    const movie = await movieService.checkoutMovieById(movieId);
+    res.send(movie);
+});
+
+app.delete("/movies/:id", async (req, res) =>{
+    const movieId = Number(req.params.id);
+    const result = await movieService.removeMovieById(movieId);
+    res.send(result);
+});
+
 app.listen(3000,()=>{console.log("Application started")});

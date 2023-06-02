@@ -60,6 +60,7 @@ var MovieServiceImpl = /** @class */ (function () {
                     case 1:
                         movie = _a.sent();
                         movie.inStock = false;
+                        movie.returnDate = Date.now() + 1209600;
                         return [4 /*yield*/, this.movieDAO.updateMovie(movie)];
                     case 2:
                         movie = _a.sent();
@@ -94,10 +95,14 @@ var MovieServiceImpl = /** @class */ (function () {
         // }
     };
     MovieServiceImpl.prototype.modifyMovie = function (movie) {
-        throw new Error("Method not implemented.");
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.movieDAO.updateMovie(movie)];
+            });
+        });
     };
     MovieServiceImpl.prototype.removeMovieById = function (movieId) {
-        throw new Error("Method not implemented.");
+        return this.movieDAO.deleteMovieById(movieId);
     };
     return MovieServiceImpl;
 }());
