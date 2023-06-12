@@ -1,8 +1,9 @@
 import { MovieDAO } from "../src/daos/movie-dao";
 import { Movie } from "../src/entities";
 import { MovieDaoTextFile } from "../src/daos/movie-dao-textfile-impl";
+import { MovieDaoPostgres } from "../src/daos/movie-dao-postgres";
 
-const movieDAO:MovieDAO = new MovieDaoTextFile();
+const movieDAO:MovieDAO = new MovieDaoPostgres();
 
 const testMovie:Movie = new Movie(0, 'Titanic', 'James Cameron', true, 1);
 

@@ -35,89 +35,94 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = __importDefault(require("express"));
-var movie_service_impl_1 = require("./services/movie-service-impl");
-var errors_1 = require("./errors");
-var app = (0, express_1.default)();
-app.use(express_1.default.json());
-// Our application routes should use services we create to do the heavy lifting.
-// Try to minimize the amount of logic in your routes that is NOT related directly to HTTP requests.
-var movieService = new movie_service_impl_1.MovieServiceImpl();
-app.get("/movies", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var movies;
+var entities_1 = require("../src/entities");
+var movie_dao_postgres_1 = require("../src/daos/movie-dao-postgres");
+var movieDAO = new movie_dao_postgres_1.MovieDaoPostgres();
+var testMovie = new entities_1.Movie(0, 'Titanic', 'James Cameron', true, 1);
+test("Create a movie", function () { return __awaiter(void 0, void 0, void 0, function () {
+    var result;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, movieService.retrieveAllMovies()];
-            case 1:
-                movies = _a.sent();
-                res.send(movies);
-                return [2 /*return*/];
-        }
-    });
-}); });
-app.get("/movies/:id", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var movieId, movie, error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                movieId = Number(req.params.id);
-                return [4 /*yield*/, movieService.retrieveMovieById(movieId)];
-            case 1:
-                movie = _a.sent();
-                res.send(movie);
-                return [3 /*break*/, 3];
-            case 2:
-                error_1 = _a.sent();
-                if (error_1 instanceof errors_1.MissingResourceError) {
-                    res.status(404);
-                    res.send(error_1);
-                }
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
-        }
-    });
-}); });
-app.post("/movies", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var movie;
-    return __generator(this, function (_a) {
-        movie = req.body;
-        movieService.registerMovie(movie);
-        res.send(movie);
-        res.status(201);
-        return [2 /*return*/];
-    });
-}); });
-app.patch("/movies/:id/checkout", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var movieId, movie;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                movieId = Number(req.params.id);
-                return [4 /*yield*/, movieService.checkoutMovieById(movieId)];
-            case 1:
-                movie = _a.sent();
-                res.send(movie);
-                return [2 /*return*/];
-        }
-    });
-}); });
-app.delete("/movies/:id", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var movieId, result;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                movieId = Number(req.params.id);
-                return [4 /*yield*/, movieService.removeMovieById(movieId)];
+            case 0: return [4 /*yield*/, movieDAO.createMovie(testMovie)];
             case 1:
                 result = _a.sent();
-                res.send(result);
+                expect(result.movieId).not.toBe(0);
                 return [2 /*return*/];
         }
     });
 }); });
-app.listen(3000, function () { console.log("Application started"); });
+// An integration test requires that two or more functions you wrote pass
+test("Get movie by ID", function () { return __awaiter(void 0, void 0, void 0, function () {
+    var movie, retrievedMovie;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                movie = new entities_1.Movie(0, "Interstellar", "Christopher Nolan", true, 1);
+                return [4 /*yield*/, movieDAO.createMovie(movie)];
+            case 1:
+                movie = _a.sent();
+                return [4 /*yield*/, movieDAO.getMovieById(movie.movieId)];
+            case 2:
+                retrievedMovie = _a.sent();
+                expect(retrievedMovie.title).toBe(movie.title);
+                return [2 /*return*/];
+        }
+    });
+}); });
+test("Get all movies", function () { return __awaiter(void 0, void 0, void 0, function () {
+    var movie1, movie2, movies;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                movie1 = new entities_1.Movie(0, "Avatar", "James Cameron", true, 0);
+                movie2 = new entities_1.Movie(0, "The Wolf of Wall Street", "Martin Scorsese", true, 0);
+                return [4 /*yield*/, movieDAO.createMovie(movie1)];
+            case 1:
+                _a.sent();
+                return [4 /*yield*/, movieDAO.createMovie(movie2)];
+            case 2:
+                _a.sent();
+                return [4 /*yield*/, movieDAO.getAllMovies()];
+            case 3:
+                movies = _a.sent();
+                expect(movies.length).toBeGreaterThanOrEqual(2);
+                return [2 /*return*/];
+        }
+    });
+}); });
+test("Update movie", function () { return __awaiter(void 0, void 0, void 0, function () {
+    var movie;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                movie = new entities_1.Movie(0, "The Count of Monte Cristo", "Kevin Reynolds", true, 0);
+                return [4 /*yield*/, movieDAO.createMovie(movie)];
+            case 1:
+                _a.sent();
+                movie.inStock = false;
+                return [4 /*yield*/, movieDAO.updateMovie(movie)];
+            case 2:
+                movie = _a.sent();
+                expect(movie.inStock).toBe(false);
+                return [2 /*return*/];
+        }
+    });
+}); });
+test("Delete movie by ID", function () { return __awaiter(void 0, void 0, void 0, function () {
+    var movie, result;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                movie = new entities_1.Movie(0, "Monte Python and the Holy Grail", "Terry Gilliam", true, 0);
+                return [4 /*yield*/, movieDAO.createMovie(movie)];
+            case 1:
+                movie = _a.sent();
+                return [4 /*yield*/, movieDAO.deleteMovieById(movie.movieId)];
+            case 2:
+                result = _a.sent();
+                expect(result).toBeTruthy();
+                return [2 /*return*/];
+        }
+    });
+}); });
