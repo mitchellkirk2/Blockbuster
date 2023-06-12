@@ -25,23 +25,29 @@ export class MovieDaoPostgres implements MovieDAO{
     }
     async getMovieById(movieId: number): Promise<Movie> {
         const sql:string = "select * from movie where movie_id = $1";
-        const values = [];
+        const values = [movieId];
         const result = await client.query(sql, values);
         const row = result.rows[0];
         const movie:Movie = new Movie(row.movie_id, row.title, row.director, row.in_stock, row.return_date);
         return movie;
     }
     async updateMovie(movie: Movie): Promise<Movie> {
-        const sql:string = "update movie set movie_id=$1, title=$2, director=$3, in_stock=$4, return_date=$5 where movie_id =$6";
-        const values = [];
+        const sql:string = "update movie set movie_id=$1, title=$2, director=$3, in_stock=$4, return_date=$5 where movie_id =$1";
+        const values = [movie.movieId,movie.title,movie.director,movie.inStock,movie.returnDate];
         const result = await client.query(sql, values);
         if(result.rowCount === 0){
             throw new MissingResourceError(`The movie with Id of ${movie.movieId} could not be found.`);
         }
         return movie;
     }
-    deleteMovieById(movieId: number): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async deleteMovieById(movieId: number): Promise<boolean> {
+        const sql:string = 'delete from movie where movie_id = $1';
+        const values = [movieId];
+        const result = await client.query(sql, values);
+        if(result.rowCount === 0){
+            throw new MissingResourceError(`The movie with id ${movieId} could not be found`);
+        }
+        return true;
     }
     
 }

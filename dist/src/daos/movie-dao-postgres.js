@@ -37,38 +37,105 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MovieDaoPostgres = void 0;
+var entities_1 = require("../entities");
 var connection_1 = require("../connection");
+var errors_1 = require("../errors");
 var MovieDaoPostgres = /** @class */ (function () {
     function MovieDaoPostgres() {
     }
     MovieDaoPostgres.prototype.createMovie = function (movie) {
         return __awaiter(this, void 0, void 0, function () {
-            var sql, values, result, savedMovie;
+            var sql, values, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        sql = "insert into book (movie_id, title, director, in_stock, return_date) values ($1,$2,$3,$4,$5) returning movie_id";
+                        sql = "insert into movie (movie_id, title, director, in_stock, return_date) values ($1,$2,$3,$4,$5) returning movie_id";
                         values = [movie.movieId, movie.title, movie.director, movie.inStock, movie.returnDate];
                         return [4 /*yield*/, connection_1.client.query(sql, values)];
                     case 1:
                         result = _a.sent();
-                        savedMovie = result.rows[0];
-                        return [2 /*return*/, savedMovie];
+                        movie.movieId = result.rows[0].movie_id;
+                        return [2 /*return*/, movie];
                 }
             });
         });
     };
     MovieDaoPostgres.prototype.getAllMovies = function () {
-        throw new Error("Method not implemented.");
+        return __awaiter(this, void 0, void 0, function () {
+            var sql, result, movies, _i, _a, row, movie;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        sql = "select * from movie";
+                        return [4 /*yield*/, connection_1.client.query(sql)];
+                    case 1:
+                        result = _b.sent();
+                        movies = [];
+                        for (_i = 0, _a = result.rows; _i < _a.length; _i++) {
+                            row = _a[_i];
+                            movie = new entities_1.Movie(row.movie_id, row.title, row.director, row.in_stock, row.return_date);
+                            movies.push(movie);
+                        }
+                        return [2 /*return*/, movies];
+                }
+            });
+        });
     };
     MovieDaoPostgres.prototype.getMovieById = function (movieId) {
-        throw new Error("Method not implemented.");
+        return __awaiter(this, void 0, void 0, function () {
+            var sql, values, result, row, movie;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        sql = "select * from movie where movie_id = $1";
+                        values = [movieId];
+                        return [4 /*yield*/, connection_1.client.query(sql, values)];
+                    case 1:
+                        result = _a.sent();
+                        row = result.rows[0];
+                        movie = new entities_1.Movie(row.movie_id, row.title, row.director, row.in_stock, row.return_date);
+                        return [2 /*return*/, movie];
+                }
+            });
+        });
     };
     MovieDaoPostgres.prototype.updateMovie = function (movie) {
-        throw new Error("Method not implemented.");
+        return __awaiter(this, void 0, void 0, function () {
+            var sql, values, result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        sql = "update movie set movie_id=$1, title=$2, director=$3, in_stock=$4, return_date=$5 where movie_id =$1";
+                        values = [movie.movieId, movie.title, movie.director, movie.inStock, movie.returnDate];
+                        return [4 /*yield*/, connection_1.client.query(sql, values)];
+                    case 1:
+                        result = _a.sent();
+                        if (result.rowCount === 0) {
+                            throw new errors_1.MissingResourceError("The movie with Id of ".concat(movie.movieId, " could not be found."));
+                        }
+                        return [2 /*return*/, movie];
+                }
+            });
+        });
     };
     MovieDaoPostgres.prototype.deleteMovieById = function (movieId) {
-        throw new Error("Method not implemented.");
+        return __awaiter(this, void 0, void 0, function () {
+            var sql, values, result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        sql = 'delete from movie where movie_id = $1';
+                        values = [movieId];
+                        return [4 /*yield*/, connection_1.client.query(sql, values)];
+                    case 1:
+                        result = _a.sent();
+                        if (result.rowCount === 0) {
+                            throw new errors_1.MissingResourceError("The movie with id ".concat(movieId, " could not be found"));
+                        }
+                        return [2 /*return*/, true];
+                }
+            });
+        });
     };
     return MovieDaoPostgres;
 }());
