@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MovieServiceImpl = void 0;
-var movie_dao_textfile_impl_1 = require("../../tests/movie-dao-textfile-impl");
+var movie_dao_textfile_impl_1 = require("../daos/movie-dao-textfile-impl");
 var MovieServiceImpl = /** @class */ (function () {
     function MovieServiceImpl() {
         this.movieDAO = new movie_dao_textfile_impl_1.MovieDaoTextFile();

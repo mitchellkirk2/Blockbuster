@@ -1,4 +1,4 @@
-import { MovieDaoTextFile } from "../../tests/movie-dao-textfile-impl";
+import { MovieDaoTextFile } from "../daos/movie-dao-textfile-impl";
 import { MovieDAO } from "../daos/movie-dao";
 import { Movie } from "../entities";
 import MovieService from "./movie-service";

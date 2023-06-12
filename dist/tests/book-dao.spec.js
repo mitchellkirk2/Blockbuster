@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var entities_1 = require("../src/entities");
-var movie_dao_textfile_impl_1 = require("./movie-dao-textfile-impl");
+var movie_dao_textfile_impl_1 = require("../src/daos/movie-dao-textfile-impl");
 var movieDAO = new movie_dao_textfile_impl_1.MovieDaoTextFile();
 var testMovie = new entities_1.Movie(0, 'Titanic', 'James Cameron', true, 1);
 test("Create a movie", function () { return __awaiter(void 0, void 0, void 0, function () {

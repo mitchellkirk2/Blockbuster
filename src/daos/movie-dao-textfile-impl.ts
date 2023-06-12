@@ -1,6 +1,7 @@
-import { MovieDAO } from "../src/daos/movie-dao";
-import { Movie } from "../src/entities";
+import { MovieDAO } from "./movie-dao";
+import { Movie } from "../entities";
 import { readFile, writeFile } from 'fs/promises';
+import { MissingResourceError } from "../errors";
 
 
 export class MovieDaoTextFile implements MovieDAO{
@@ -36,6 +37,7 @@ export class MovieDaoTextFile implements MovieDAO{
                 return  movie;
             } 
         }
+        throw new MissingResourceError(`The movie with id${movieId} could not be located`);
     }
 
     async getMovieByTitle(movieTitle:string): Promise<Movie>{

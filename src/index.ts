@@ -2,6 +2,7 @@ import express from 'express';
 import MovieService from './services/movie-service';
 import { MovieServiceImpl } from './services/movie-service-impl';
 import { Movie } from './entities';
+import { MissingResourceError } from './errors';
 
 const app = express();
 app.use(express.json());
@@ -17,15 +18,23 @@ app.get("/movies", async (req, res)=> {
 });
 
 app.get("/movies/:id", async (req, res)=>{
-    const movieId = Number(req.params.id);
-    const movie:Movie = await movieService.retrieveMovieById(movieId);
-    res.send(movie); 
+    try{
+        const movieId = Number(req.params.id);
+        const movie:Movie = await movieService.retrieveMovieById(movieId);
+        res.send(movie); 
+    } catch(error){
+        if(error instanceof MissingResourceError){
+            res.status(404);
+            res.send(error);
+        }
+    }
 });
 
 app.post("/movies", async (req, res) =>{
     let movie:Movie = req.body;
     movieService.registerMovie(movie);
     res.send(movie);
+    res.status(201);
 });
 
 app.patch("/movies/:id/checkout", async (req, res)=>{

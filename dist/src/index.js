@@ -41,6 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var movie_service_impl_1 = require("./services/movie-service-impl");
+var errors_1 = require("./errors");
 var app = (0, express_1.default)();
 app.use(express_1.default.json());
 // Our application routes should use services we create to do the heavy lifting.
@@ -59,16 +60,25 @@ app.get("/movies", function (req, res) { return __awaiter(void 0, void 0, void 0
     });
 }); });
 app.get("/movies/:id", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var movieId, movie;
+    var movieId, movie, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                _a.trys.push([0, 2, , 3]);
                 movieId = Number(req.params.id);
                 return [4 /*yield*/, movieService.retrieveMovieById(movieId)];
             case 1:
                 movie = _a.sent();
                 res.send(movie);
-                return [2 /*return*/];
+                return [3 /*break*/, 3];
+            case 2:
+                error_1 = _a.sent();
+                if (error_1 instanceof errors_1.MissingResourceError) {
+                    res.status(404);
+                    res.send(error_1);
+                }
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); });
@@ -79,6 +89,34 @@ app.post("/movies", function (req, res) { return __awaiter(void 0, void 0, void 
         movieService.registerMovie(movie);
         res.send(movie);
         return [2 /*return*/];
+    });
+}); });
+app.patch("/movies/:id/checkout", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var movieId, movie;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                movieId = Number(req.params.id);
+                return [4 /*yield*/, movieService.checkoutMovieById(movieId)];
+            case 1:
+                movie = _a.sent();
+                res.send(movie);
+                return [2 /*return*/];
+        }
+    });
+}); });
+app.delete("/movies/:id", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var movieId, result;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                movieId = Number(req.params.id);
+                return [4 /*yield*/, movieService.removeMovieById(movieId)];
+            case 1:
+                result = _a.sent();
+                res.send(result);
+                return [2 /*return*/];
+        }
     });
 }); });
 app.listen(3000, function () { console.log("Application started"); });

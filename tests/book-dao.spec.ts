@@ -1,6 +1,6 @@
 import { MovieDAO } from "../src/daos/movie-dao";
 import { Movie } from "../src/entities";
-import { MovieDaoTextFile } from "./movie-dao-textfile-impl";
+import { MovieDaoTextFile } from "../src/daos/movie-dao-textfile-impl";
 
 const movieDAO:MovieDAO = new MovieDaoTextFile();
 
